@@ -24,10 +24,10 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 
 
-N = 150
+N = 1000
 
-def sac_am(data, N, menorTam):
-    M = menorTam
+def sac_am(data):
+    M = len(data)
     
     size = int(M/N)
     sacam = [0.0] * size
@@ -39,7 +39,7 @@ def sac_am(data, N, menorTam):
     
         peaks, _ = find_peaks(data[start:end])
         v = []
-        for p in range(len(data[peaks])): v.append(data[peaks][p][0]) 
+        for p in range(len(data[peaks])): v.append(data[peaks][p]) 
         s = sum(np.absolute(v))
         sacam[k] = 1.0*s/N
         start = end
@@ -82,7 +82,7 @@ if(len(sys.argv) > 2):
 if(len(sys.argv) > 3):
     file3 = sys.argv[3]+'.csv'
     data3 = pd.read_csv(file3)
-    class_names = [sys.argv[1],sys.argv[2],sys.argv[3]]
+    class_names = ["VN","CF1","CF2"]
     input3[0],input3[1],input3[2] = sac_dm(np.array(data3["Eixo X"])),sac_dm(np.array(data3["Eixo Y"])),sac_dm(np.array(data3["Eixo Z"]))
 
 if(len(sys.argv) > 4):
@@ -106,8 +106,8 @@ if(len(sys.argv) > 4):
 aux = [len(input1[0]),len(input2[0]),len(input3[0]),len(input4[0])]
 for i in range(aux.count(0)): aux.remove(0) 
 
-menorTam = min(aux)
-
+#menorTam = min(aux)
+menorTam = int(len(input1[0])/2)
 
 if(len(input1[0]) != menorTam):
     input1[0],input1[1],input1[2] = input1[0][:menorTam],input1[1][:menorTam],input1[2][:menorTam]
@@ -149,10 +149,12 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random
 
 # Classificadores 
 
-#classifier = KNeighborsClassifier(3).fit(X_train, y_train)
-#classifier = svm.SVC(kernel='linear', C=100).fit(X_train, y_train)
-
+classifier = KNeighborsClassifier(3).fit(X_train, y_train)
 #classifier = svm.SVC(gamma=2, C=1000).fit(X_train, y_train)
+#classifier = svm.SVC(kernel='linear', C=1).fit(X_train, y_train)
+
+#usar esse
+
 
 #classifier = GaussianProcessClassifier(1.0 * RBF(1.0)).fit(X_train, y_train)
 
@@ -163,7 +165,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random
 
 #classifier = MLPClassifier(alpha=1, max_iter=1000).fit(X_train, y_train)
 
-classifier = AdaBoostClassifier(n_estimators=100,learning_rate=0.5).fit(X_train, y_train) #esse ta melhor
+#classifier = AdaBoostClassifier(n_estimators=100,learning_rate=0.5).fit(X_train, y_train) #esse ta melhor
 
 #classifier = GaussianNB().fit(X_train, y_train)
 
@@ -178,7 +180,7 @@ np.set_printoptions(precision=2)
 
 # Plot non-normalized confusion matrix
 titles_options = [("Confusion matrix, without normalization", None),
-                  ("Normalized confusion matrix", 'true')]
+                  ("Matriz de Confusão com SAC-AM", 'true')]
 
 
 
@@ -198,10 +200,16 @@ for title, normalize in titles_options:
 
 print("acuracia: ",classifier.score(X, y),"%")
 
-""" loaded_model = pickle.load(open(filename, 'rb'))
-result = loaded_model.score(X_test, Y_test)
-print(result) """
+filename = 'KNN_final.sav'
+pickle.dump(classifier, open(filename, 'wb'))
+#print(len(X_test),len(X))
+#loaded_model = pickle.load(open("KNN.sav", 'rb'))
+#xteste = pickle.load(open("X.sav", 'rb'))
+#result = loaded_model.predict(xteste)
 
+#for i in range(len(result)): print(result[i],y_test[i])
+
+#print(result)
 
 
 """ B = np.array(inputChegada).T 

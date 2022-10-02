@@ -11,9 +11,9 @@ import sys
 import threading
 
 # Nome do arquivo que armazenará a coleta do SAC-DM
-nomeArquivo = 'voo_normal_30-12-21'
+nomeArquivo = 'voo_repouso_03'
 
-localIP     = "192.168.1.100"
+localIP     = "192.168.43.142"
 #localIP     = "192.168.1.5"
 
 

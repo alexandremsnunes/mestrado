@@ -49,7 +49,7 @@ def sac_am(data, N):
     
         peaks, _ = find_peaks(data[start:end])
         v = []
-        for p in range(len(data[peaks])): v.append(data[peaks][p][0]) 
+        for p in range(len(data[peaks])): v.append(data[peaks][p])  
         s = sum(np.absolute(v))
         sacam[k] = 1.0*s/N
         start = end
@@ -69,12 +69,12 @@ N = 100
 file1 = sys.argv[1]+'.csv'
 file2 = sys.argv[2]+'.csv'
 file3 = sys.argv[3]+'.csv'
-file4 = sys.argv[4]+'.csv'
+#file4 = sys.argv[4]+'.csv'
 
 data1 = pd.read_csv(file1)
 data2 = pd.read_csv(file2)
 data3 = pd.read_csv(file3)
-data4 = pd.read_csv(file4)
+#data4 = pd.read_csv(file4)
 
 #signal1 = np.array(data1["Eixo X"])
 #signal2 = np.array(data2["Eixo X"])
@@ -100,65 +100,69 @@ sac2 = sac_dm(signal2, N, menorTam) """
 fig, ax = plt.subplots(3,1, sharex=True, sharey=False)
 fig.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=0.4, hspace=1.0)
 fig.set_size_inches(10, 6, forward=True)
-fig.suptitle("Signals" , fontsize=12)
+fig.suptitle("Sinais Brutos" , fontsize=12)
 
 
-ax[0].plot(data1["Eixo X"],color='r', label= 'Signal x')
-ax[0].plot(data2["Eixo X"],color='b', label='Signal x')
-ax[0].plot(data3["Eixo X"],color='g', label= 'Signal x')
-ax[0].plot(data4["Eixo X"],color='black', label='Signal x')
+ax[0].plot(data1["Eixo X"],color='r', label= 'Sinal x')
+ax[0].plot(data2["Eixo X"],color='b', label='Sinal x')
+ax[0].plot(data3["Eixo X"],color='g', label= 'Sinal x')
+#ax[0].plot(data4["Eixo X"],color='black', label='Signal x')
 
 #ax[0].legend([sys.argv[1], sys.argv[2]], loc='upper left') 
-ax[0].set_title('Signal x')
+ax[0].set_title('Sinal x')
+ax[0].legend(["VN", "CF1", "CF2"], loc='upper right')
 
-ax[1].plot(data1["Eixo Y"],color='r', label='Signal y')
-ax[1].plot(data2["Eixo Y"],color='b', label='Signal y')
-ax[1].plot(data3["Eixo Y"],color='g', label= 'Signal x')
-ax[1].plot(data4["Eixo Y"],color='black', label='Signal x')
+ax[1].plot(data1["Eixo Y"],color='r', label='Sinal y')
+ax[1].plot(data2["Eixo Y"],color='b', label='Sinal y')
+ax[1].plot(data3["Eixo Y"],color='g', label= 'Sinal y')
+#ax[1].plot(data4["Eixo Y"],color='black', label='Signal y')
 
 #ax[1].legend([sys.argv[1], sys.argv[2]], loc='upper left') 
-ax[1].set_title('Signal y')
+ax[1].set_title('Sinal y')
+ax[1].legend(["VN", "CF1", "CF2"], loc='upper right')
 
-ax[2].plot(data1["Eixo Z"],color='r', label='Signal z')
-ax[2].plot(data2["Eixo Z"],color='b', label='Signal z')
-ax[2].plot(data3["Eixo Z"],color='g', label= 'Signal x')
-ax[2].plot(data4["Eixo Z"],color='black', label='Signal x')
+ax[2].plot(data1["Eixo Z"],color='r', label='Sinal z')
+ax[2].plot(data2["Eixo Z"],color='b', label='Sinal z')
+ax[2].plot(data3["Eixo Z"],color='g', label= 'Sinal z')
+#ax[2].plot(data4["Eixo Z"],color='black', label='Signal z')
 
 #ax[2].legend([sys.argv[1], sys.argv[2]], loc='upper left') 
-ax[2].set_title('Signal z')
-
+ax[2].set_title('Sinal z')
+ax[2].legend(["VN", "CF1", "CF2"], loc='upper right')
 
 for ax in ax.flat:
-    ax.set(xlabel='n-Value', ylabel='Amplitude')
+    ax.set(xlabel='Valor-n', ylabel='Amplitude')
 
 
 fig2, ax2 = plt.subplots(3,1, sharex=True, sharey=False)
 fig2.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=0.4, hspace=1.0)
 fig2.set_size_inches(10, 6, forward=True)
-fig2.suptitle("Signal" , fontsize=12)
+fig2.suptitle("Sinais com SAC-AM" , fontsize=12)
 
 
-ax2[0].plot(sac_dm(data1["Eixo X"],N),color='r', label= 'Signal x')
-ax2[0].plot(sac_dm(data2["Eixo X"],N),color='b', label='Signal x')
-ax2[0].plot(sac_dm(data3["Eixo X"],N),color='g', label= 'Signal x')
-ax2[0].plot(sac_dm(data4["Eixo X"],N),color='black', label='Signal x')
+ax2[0].plot(sac_am(np.array(data1["Eixo X"]),N),color='r', label= 'Sinal x')
+ax2[0].plot(sac_am(np.array(data2["Eixo X"]),N),color='b', label='Sinal x')
+ax2[0].plot(sac_am(np.array(data3["Eixo X"]),N),color='g', label= 'Sinal x')
+#ax2[0].plot(sac_dm(data4["Eixo X"],N),color='black', label='Sinal x')
 #ax2[0].legend([sys.argv[1], sys.argv[2]], loc='upper left') 
-ax2[0].set_title('Signal x')
+ax2[0].set_title('Sinal x')
+ax2[0].legend(["VN", "CF1", "CF2"], loc='upper right')
 
-ax2[1].plot(sac_dm(data1["Eixo Y"],N),color='r', label='Signal y')
-ax2[1].plot(sac_dm(data2["Eixo Y"],N),color='b', label='Signal y')
-ax2[1].plot(sac_dm(data3["Eixo Y"],N),color='g', label= 'Signal x')
-ax2[1].plot(sac_dm(data4["Eixo Y"],N),color='black', label='Signal x')
+ax2[1].plot(sac_am(np.array(data1["Eixo Y"]),N),color='r', label='Sinal y')
+ax2[1].plot(sac_am(np.array(data2["Eixo Y"]),N),color='b', label='Sinal y')
+ax2[1].plot(sac_am(np.array(data3["Eixo Y"]),N),color='g', label= 'Sinal x')
+#ax2[1].plot(sac_dm(data4["Eixo Y"],N),color='black', label='Sinal x')
 #ax2[1].legend([sys.argv[1], sys.argv[2]], loc='upper left') 
-ax2[1].set_title('Signal y')
+ax2[1].set_title('Sinal y')
+ax2[1].legend(["VN", "CF1", "CF2"], loc='upper right')
 
-ax2[2].plot(sac_dm(data1["Eixo Z"],N),color='r', label='Signal z')
-ax2[2].plot(sac_dm(data2["Eixo Z"],N),color='b', label='Signal z')
-ax2[2].plot(sac_dm(data3["Eixo Z"],N),color='g', label= 'Signal x')
-ax2[2].plot(sac_dm(data4["Eixo Z"],N),color='black', label='Signal x')
+ax2[2].plot(sac_am(np.array(data1["Eixo Z"]),N),color='r', label='Sinal z')
+ax2[2].plot(sac_am(np.array(data2["Eixo Z"]),N),color='b', label='Sinal z')
+ax2[2].plot(sac_am(np.array(data3["Eixo Z"]),N),color='g', label= 'Sinal x')
+#ax2[2].plot(sac_dm(data4["Eixo Z"],N),color='black', label='Sinal x')
 #ax2[2].legend([sys.argv[1], sys.argv[2]], loc='upper left') 
-ax2[2].set_title('Signal z')
-
+ax2[2].set_title('Sinal z')
+ax2[2].legend(["VN", "CF1", "CF2"], loc='upper right')
 
 for ax2 in ax2.flat:
     ax2.set(xlabel='n-Value', ylabel='Amplitude')

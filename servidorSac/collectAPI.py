@@ -3,8 +3,8 @@ from flask import Flask, request, Response
 import socket
 
 
-serverAddressPort = ("192.168.1.102", 20001) #ip m5
-#serverAddressPort     = ("192.168.1.7",20001) #ip m5
+#serverAddressPort = ("192.168.43.119", 20001) #ip m5
+serverAddressPort     = ("192.168.43.40",20001) #ip m5
 bufferSize = 1024
 
 # Create a UDP socket at client side
@@ -24,7 +24,7 @@ def control():
 
 
 
-app.run(host='192.168.1.100', port= 5000, debug=False)
+app.run(host='192.168.43.142', port= 5000, debug=False)
 #app.run(host="192.168.1.5", port= 5000, debug=False)
 #localIP     = 
 # Cria rota que a ESP8266 realizará o http.POST com os resultados do SAC-DM

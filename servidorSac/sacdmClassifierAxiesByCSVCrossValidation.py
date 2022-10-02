@@ -24,7 +24,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from sklearn.model_selection import cross_val_score
 
-N = 100
+N = 1000
 
 def sac_am(data, N, menorTam):
     M = menorTam
@@ -69,27 +69,28 @@ def sac_dm(data):
 file1 = sys.argv[1]+'.csv'
 file2 = sys.argv[2]+'.csv'
 file3 = sys.argv[3]+'.csv'
-file4 = sys.argv[4]+'.csv'
+#file4 = sys.argv[4]+'.csv'
 
 data1 = pd.read_csv(file1)
 data2 = pd.read_csv(file2)
 data3 = pd.read_csv(file3)
-data4 = pd.read_csv(file4)
+#data4 = pd.read_csv(file4)
 #data3 = pd.read_csv(file3)
 
 input1 = [[],[],[]]
 input2 = [[],[],[]]
 input3 = [[],[],[]]
-input4 = [[],[],[]]
+#input4 = [[],[],[]]
 #inputChegada = [[],[],[]]
 
 input1[0],input1[1],input1[2] = sac_dm(np.array(data1["Eixo X"])),sac_dm(np.array(data1["Eixo Y"])),sac_dm(np.array(data1["Eixo Z"]))
 input2[0],input2[1],input2[2] = sac_dm(np.array(data2["Eixo X"])),sac_dm(np.array(data2["Eixo Y"])),sac_dm(np.array(data2["Eixo Z"]))
 input3[0],input3[1],input3[2] = sac_dm(np.array(data3["Eixo X"])),sac_dm(np.array(data3["Eixo Y"])),sac_dm(np.array(data3["Eixo Z"]))
-input4[0],input4[1],input4[2] = sac_dm(np.array(data4["Eixo X"])),sac_dm(np.array(data4["Eixo Y"])),sac_dm(np.array(data4["Eixo Z"]))
+#input4[0],input4[1],input4[2] = sac_dm(np.array(data4["Eixo X"])),sac_dm(np.array(data4["Eixo Y"])),sac_dm(np.array(data4["Eixo Z"]))
 #inputChegada[0],inputChegada[1],inputChegada[2] = sac_dm(np.array(data3["Eixo X"])),sac_dm(np.array(data3["Eixo Y"])),sac_dm(np.array(data3["Eixo Z"]))
 
-menorTam = min(len(input1[0]),len(input2[0]),len(input3[0]),len(input4[0]))
+menorTam = min(len(input1[0]),len(input2[0]),len(input3[0]))
+#menorTam = min(len(input1[0]),len(input2[0]),len(input3[0]),len(input4[0]))
 
 
 if(len(input1[0]) != menorTam):
@@ -98,32 +99,34 @@ if(len(input2[0]) != menorTam):
     input2[0],input2[1],input2[2] = input2[0][:menorTam],input2[1][:menorTam],input2[2][:menorTam]
 if(len(input3[0]) != menorTam):
     input3[0],input3[1],input3[2] = input3[0][:menorTam],input3[1][:menorTam],input3[2][:menorTam]
-if(len(input4[0]) != menorTam):
-    input4[0],input4[1],input4[2] = input4[0][:menorTam],input4[1][:menorTam],input4[2][:menorTam]
+#if(len(input4[0]) != menorTam):
+#    input4[0],input4[1],input4[2] = input4[0][:menorTam],input4[1][:menorTam],input4[2][:menorTam]
 
 
 
-X = np.concatenate((np.array(input1).T, np.array(input2).T, np.array(input3).T, np.array(input4).T)) 
+#X = np.concatenate((np.array(input1).T, np.array(input2).T, np.array(input3).T, np.array(input4).T))
+X = np.concatenate((np.array(input1).T, np.array(input2).T, np.array(input3).T))
 X = X.astype(np.float64)
 
 y = []
 
 for i in range(len(X)):
-    if(i<(len(X)/4)):
+    if(i<(len(X)/3)):
         y.append(0)    
-    elif(i>=(len(X)/4) and i < ((2*len(X))/4)):
+    elif(i>=(len(X)/3) and i < ((2*len(X))/3)):
         y.append(1)
-    elif(i>=((2*len(X))/4) and i < ((3*len(X))/4)):
+    else: #elif(i>=((2*len(X))/4) and i < ((3*len(X))/4)):
         y.append(2)
-    else:
-        y.append(3)
+    #else:
+    #    y.append(3)
 
 print(y.count(0))
 print(y.count(1))
 print(y.count(2))
-print(y.count(3))
+#print(y.count(3))
 y = np.array(y)
-class_names = [sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4]]
+class_names = [sys.argv[1],sys.argv[2],sys.argv[3]]
+# class_names = [sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4]]
 
 
 
@@ -167,8 +170,8 @@ class_names = [sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4]]
 
 #np.set_printoptions(precision=2)
 
-clf = svm.SVC(kernel='linear', C=100, random_state=42)
-#clf = KNeighborsClassifier(3)
+#clf = svm.SVC(kernel='linear', C=100, random_state=42)
+clf = KNeighborsClassifier(3)
 #clf = svm.SVC(kernel='linear', C=100)
 scores = cross_val_score(clf, X, y, cv=5)
 
@@ -215,7 +218,7 @@ print( ((np.count_nonzero(res == 0))/len(res))*100)
  """
 
 #Figure Settings
-fig, ax = plt.subplots(3,1, sharex=True, sharey=False)
+""" fig, ax = plt.subplots(3,1, sharex=True, sharey=False)
 fig.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=0.4, hspace=1.0)
 fig.set_size_inches(10, 6, forward=True)
 fig.suptitle("SACDM" , fontsize=12)
@@ -269,6 +272,6 @@ for ax2 in ax2.flat:
 #print("\nFile analyse: " , f , '\n')
 
 plt.show()
-
+ """
 
  
